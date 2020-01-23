@@ -2,7 +2,6 @@ package main
 
 import (
 	"bufio"
-	"flag"
 	"fmt"
 	"net"
 	"os"
@@ -118,7 +117,7 @@ func (client *Client) recieve() {
 
 func startClientMode() {
 	fmt.Println("Starting client...")
-	connection, error := net.Dial("tcp", "localhost:8080")
+	connection, error := net.Dial("tcp", "192.168.102.177:12345")
 	if error != nil {
 		fmt.Println(error)
 	}
@@ -138,11 +137,16 @@ func startClientMode() {
 }
 
 func main() {
-	flagMode := flag.String("mode", "server", "start in client or server mode")
-	flag.Parse()
-	if strings.ToLower(*flagMode) == "server" {
-		startServerMode()
-	} else {
-		startClientMode()
-	}
+
+	/*
+		flagMode := flag.String("mode", "server", "start in client or server mode")
+		flag.Parse()
+		if strings.ToLower(*flagMode) == "server" {
+			startServerMode()
+		} else {
+			startClientMode()
+		}
+	*/
+	startClientMode()
+
 }
