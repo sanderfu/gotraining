@@ -2,6 +2,7 @@ package main
 
 import (
 	"bufio"
+	"flag"
 	"fmt"
 	"net"
 	"os"
@@ -76,7 +77,7 @@ func (manager *ClientManager) send(client *Client) {
 
 func startServerMode() {
 	fmt.Println("Starting server...")
-	listener, error := net.Listen("tcp", ":8080")
+	listener, error := net.Listen("tcp", "192.168.102.177:12345")
 	if error != nil {
 		fmt.Println(error)
 	}
@@ -138,15 +139,12 @@ func startClientMode() {
 
 func main() {
 
-	/*
-		flagMode := flag.String("mode", "server", "start in client or server mode")
-		flag.Parse()
-		if strings.ToLower(*flagMode) == "server" {
-			startServerMode()
-		} else {
-			startClientMode()
-		}
-	*/
-	startClientMode()
+	flagMode := flag.String("mode", "server", "start in client or server mode")
+	flag.Parse()
+	if strings.ToLower(*flagMode) == "server" {
+		startServerMode()
+	} else {
+		startClientMode()
+	}
 
 }
