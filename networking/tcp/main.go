@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"net"
 	"os"
+	"os/exec"
 	"strings"
 )
 
@@ -75,9 +76,9 @@ func (manager *ClientManager) send(client *Client) {
 	}
 }
 
-func startServerMode() {
+func startServerMode(addr string) {
 	fmt.Println("Starting server...")
-	listener, error := net.Listen("tcp", "192.168.102.177:12345")
+	listener, error := net.Listen("tcp", addr)
 	if error != nil {
 		fmt.Println(error)
 	}
@@ -116,9 +117,9 @@ func (client *Client) recieve() {
 	}
 }
 
-func startClientMode() {
+func startClientMode(addr string) {
 	fmt.Println("Starting client...")
-	connection, error := net.Dial("tcp", "192.168.102.177:12345")
+	connection, error := net.Dial("tcp", addr)
 	if error != nil {
 		fmt.Println(error)
 	}
@@ -137,14 +138,31 @@ func startClientMode() {
 	}
 }
 
-func main() {
+func fetchAddr() string {
+	cmd := "hostname"
+	args := []string{"-I"}
+	command := exec.Command(cmd, args[0])
+	out, err := command.Output()
 
+	if err != nil {
+		fmt.Println("Error", err)
+		panic(err)
+		return ""
+	}
+
+	port := "42070"
+	return strings.TrimSpace(string(out)) + ":" + port
+}
+
+func main() {
+	addr := fetchAddr()
 	flagMode := flag.String("mode", "server", "start in client or server mode")
 	flag.Parse()
 	if strings.ToLower(*flagMode) == "server" {
-		startServerMode()
+		startServerMode(addr)
 	} else {
-		startClientMode()
+		serverAddr := addr //This is just for local testing
+		startClientMode(serverAddr)
 	}
 
 }
